@@ -16,7 +16,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     protected Page<ProductDTO> findAllPaged(Pageable page) {
-        Page<ProductEntity> rsl = productRepo.findAllPagead();
+        Page<ProductEntity> rsl = productRepo.findAllPagead(page);
         return rsl.map(ProductDTO::new);
 
     }

@@ -12,7 +12,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class CategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +20,11 @@ public class CategoryEntity {
 
     @ManyToMany(mappedBy = "categories")
     private Set<ProductEntity> products = new HashSet<>();
+
+    public CategoryEntity(Long id, String name) {
+        this.name = name;
+    }
+
 
 
     @Override
