@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ class ProductServiceTest {
         ProductService servSPY = Mockito.spy(productService);
 
         Mockito.when(productRepo.findAllPagead((Pageable) ArgumentMatchers.any())).thenReturn(page);
-        Mockito.when(servSPY.findAllPaged((Pageable) ArgumentMatchers.any()))
+        Mockito.when(servSPY.findAllPagead((Pageable) ArgumentMatchers.any()))
                 .thenReturn(pageDTO);
     }
 
@@ -50,7 +51,7 @@ class ProductServiceTest {
         Pageable pg = PageRequest.of(1, 10);
         ProductService servSPY = Mockito.spy(productService);
         //ACT
-        Page<ProductDTO> pgDTO = servSPY.findAllPaged(pg);
+        Page<ProductDTO> pgDTO = servSPY.findAllPagead(pg);
 
         //ASSERTIONS
         Assertions.assertNotNull(pgDTO);
