@@ -21,6 +21,7 @@ public class ProductEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String name;
     private String description;
     private Double price;
@@ -32,7 +33,6 @@ public class ProductEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<CategoryEntity> categories = new HashSet<>();
-
 
 
     public void addCategory(CategoryEntity cat) {
