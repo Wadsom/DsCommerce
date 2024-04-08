@@ -30,4 +30,10 @@ public class ProductEntity {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<CategoryEntity> categories = new HashSet<>();
+
+
+
+    public void addCategory(CategoryEntity cat) {
+        categories.add(cat);
+    }
 }
