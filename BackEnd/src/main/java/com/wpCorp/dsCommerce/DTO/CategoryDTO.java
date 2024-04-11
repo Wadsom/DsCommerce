@@ -9,11 +9,14 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class CategoryDTO  {
 
     private Long id;
     private String name;
+
+    public CategoryDTO(Long id) {
+        this.id = id;
+    }
 
     public CategoryDTO(CategoryEntity categoryEntity) {
         this.id = categoryEntity.getId();

@@ -10,11 +10,10 @@ import java.util.Set;
 public class Factory {
 
     public static ProductEntity createProd() {
-        Set<CategoryEntity> categoryEntities = new HashSet<>();
-        categoryEntities.add(new CategoryEntity(1L, "Eletronicos"));
         ProductEntity prd;
-        prd = new ProductEntity(1L, "GameStation", "YUDI e PRICILLA",
-                200.0, "http://okokk.com", categoryEntities);
+        prd = new ProductEntity("GameStation", "YUDI e PRICILLA",
+                200.0, "http://okokk.com");
+        prd.getCategories().add(new CategoryEntity(1L, "Eletronicos"));
         return prd;
     }
 

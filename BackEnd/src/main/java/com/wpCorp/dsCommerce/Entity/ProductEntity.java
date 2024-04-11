@@ -15,7 +15,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ProductEntity implements Serializable {
     private static final Long serialVersionUID = 1L;
     @Id
@@ -33,6 +32,14 @@ public class ProductEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<CategoryEntity> categories = new HashSet<>();
+
+    public ProductEntity(String name, String description, Double price, String imgUrl) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.imgUrl = imgUrl;
+    }
+
 
 
     public void addCategory(CategoryEntity cat) {
