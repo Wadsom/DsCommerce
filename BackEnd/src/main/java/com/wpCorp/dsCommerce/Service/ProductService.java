@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class ProductService {
         Page<ProductEntity> rsl = productRepo.findAll(page);
         return rsl.map(ProductDTO::new);
     }
+
 
     @Transactional(readOnly = true)
     public ProductDTO findByOne(Long id) {
@@ -65,9 +67,6 @@ public class ProductService {
     }
 
 
-
-
-
     @Transactional
     protected void copyDtoToProduct(ProductDTO dto, ProductEntity prd) {
         prd.setName(dto.getName());
@@ -80,5 +79,9 @@ public class ProductService {
         }
     }
 
-
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void deleteProduct(Long id) {
+        if (!productRepo.existsById(id)) throw new ProductNotFoundException("Product not found");
+        productRepo.deleteById(id);
+    }
 }
