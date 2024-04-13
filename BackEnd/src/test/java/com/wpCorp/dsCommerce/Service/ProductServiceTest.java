@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,19 +51,26 @@ class ProductServiceTest {
         idNotExists = 100L;
         prd = Factory.createProd();
         page = new PageImpl<>(List.of(prd));
+        prdDTO = new ProductDTO(prd);
         ProductService servSPY = Mockito.spy(productService);
 
-        Mockito.when(productRepo.findAllPagead((Pageable) ArgumentMatchers.any())).thenReturn(page);
-        Mockito.when(servSPY.findAllPagead((Pageable) ArgumentMatchers.any()))
-                .thenReturn(pageDTO);
+        //Mockito.when(productRepo.searchAllPagead((Pageable) ArgumentMatchers.any())).thenReturn(page);
+        //Mockito.when(servSPY.findAllPaged((Pageable) ArgumentMatchers.any())).thenReturn(pageDTO);
         Mockito.doThrow(ProductNotFoundException.class).when(productRepo).findById(idNotExists);
         Mockito.doThrow(ProductNotFoundException.class).when(servSPY).findByOne(idNotExists);
+        Mockito.doThrow(ProductNotFoundException.class).when(servSPY).updateProduct(idNotExists, prdDTO);
+        Mockito.doThrow(ProductNotFoundException.class).when(productRepo).existsById(idNotExists);
+
+        Mockito.when(productRepo.existsById(idExists)).thenReturn(true);
+        Mockito.when(servSPY.updateProduct(idExists, prdDTO)).thenReturn(prdDTO);
+
         Mockito.when(productRepo.findById(idExists)).thenReturn(Optional.of(prd));
         Mockito.when(servSPY.findByOne(idExists)).thenReturn(prdDTO);
 
         Mockito.when(productRepo.save(ArgumentMatchers.any())).thenReturn(prd);
         Mockito.when(categoryRepo.getReferenceById((Long) ArgumentMatchers.any())).thenReturn(category);
     }
+
 
     @Test
     void doNotThrowExceptionWhenInsertProductDtoValid() {
@@ -88,7 +94,7 @@ class ProductServiceTest {
         Pageable pg = PageRequest.of(1, 10);
         ProductService servSPY = Mockito.spy(productService);
         //ACT
-        Page<ProductDTO> pgDTO = servSPY.findAllPagead(pg);
+        Page<ProductDTO> pgDTO = servSPY.findAllPaged(pg);
 
         //ASSERTIONS
         Assertions.assertNotNull(pgDTO);

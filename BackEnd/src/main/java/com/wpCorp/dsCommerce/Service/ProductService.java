@@ -24,8 +24,8 @@ public class ProductService {
     private CategoryRepository categoryRepo;
 
     @Transactional(readOnly = true)
-    protected Page<ProductDTO> findAllPagead(Pageable page) {
-        Page<ProductEntity> rsl = productRepo.findAllPagead(page);
+    public Page<ProductDTO> findAllPaged(Pageable page) {
+        Page<ProductEntity> rsl = productRepo.findAll(page);
         return rsl.map(ProductDTO::new);
     }
 
@@ -46,12 +46,37 @@ public class ProductService {
             prd.setImgUrl(dto.getImgUrl());
             for (CategoryDTO cate : dto.getCategories()) {
                 CategoryEntity cat = categoryRepo.getReferenceById(cate.getId());
-                prd.addCategory(cat);
+                prd.getCategories().add(cat);
             }
             prd = productRepo.save(prd);
             return new ProductDTO(prd);
         } catch (IntegrationException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    public ProductDTO updateProduct(Long id, ProductDTO dto) {
+        if (!productRepo.existsById(id)) throw new ProductNotFoundException("Product not found");
+        ProductEntity prd = productRepo.getReferenceById(id);
+        copyDtoToProduct(dto, prd);
+        prd = productRepo.save(prd);
+        return new ProductDTO(prd);
+    }
+
+
+
+
+
+    @Transactional
+    protected void copyDtoToProduct(ProductDTO dto, ProductEntity prd) {
+        prd.setName(dto.getName());
+        prd.setDescription(dto.getDescription());
+        prd.setPrice(dto.getPrice());
+        prd.setImgUrl(dto.getImgUrl());
+        for (CategoryDTO cate : dto.getCategories()) {
+            CategoryEntity cat = categoryRepo.getReferenceById(cate.getId());
+            prd.getCategories().add(cat);
         }
     }
 
